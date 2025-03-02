@@ -57,6 +57,9 @@ type SecretKey =
 	| "liteLlmApiKey"
 	| "authToken"
 	| "authNonce"
+	| "elvexApiKey"
+	| "elvexAppId"
+	| "elvexVersion"
 type GlobalStateKey =
 	| "apiProvider"
 	| "apiModelId"
@@ -95,6 +98,8 @@ type GlobalStateKey =
 	| "togetherModelId"
 	| "mcpMarketplaceCatalog"
 	| "telemetrySetting"
+	| "elvexAppId"
+	| "elvexVersion"
 
 export const GlobalFileNames = {
 	apiConversationHistory: "api_conversation_history.json",
@@ -517,6 +522,9 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 								liteLlmModelId,
 								liteLlmApiKey,
 								qwenApiLine,
+								elvexApiKey,
+								elvexAppId,
+								elvexVersion,
 							} = message.apiConfiguration
 							await this.updateGlobalState("apiProvider", apiProvider)
 							await this.updateGlobalState("apiModelId", apiModelId)
@@ -557,6 +565,9 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 							await this.updateGlobalState("qwenApiLine", qwenApiLine)
 							await this.updateGlobalState("requestyModelId", requestyModelId)
 							await this.updateGlobalState("togetherModelId", togetherModelId)
+							await this.storeSecret("elvexApiKey", elvexApiKey)
+							await this.storeSecret("elvexAppId", elvexAppId)
+							await this.storeSecret("elvexVersion", elvexVersion)
 							if (this.cline) {
 								this.cline.api = buildApiHandler(message.apiConfiguration)
 							}
@@ -1163,7 +1174,6 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 			vscode.window.showErrorMessage("Failed to log in to Cline")
 		}
 	}
-
 	// MCP Marketplace
 
 	private async fetchMcpMarketplaceFromApi(silent: boolean = false): Promise<McpMarketplaceCatalog | undefined> {
@@ -1766,6 +1776,9 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 			qwenApiLine,
 			liteLlmApiKey,
 			telemetrySetting,
+			elvexApiKey,
+			elvexAppId,
+			elvexVersion,
 		] = await Promise.all([
 			this.getGlobalState("apiProvider") as Promise<ApiProvider | undefined>,
 			this.getGlobalState("apiModelId") as Promise<string | undefined>,
@@ -1818,6 +1831,9 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 			this.getGlobalState("qwenApiLine") as Promise<string | undefined>,
 			this.getSecret("liteLlmApiKey") as Promise<string | undefined>,
 			this.getGlobalState("telemetrySetting") as Promise<TelemetrySetting | undefined>,
+			this.getSecret("elvexApiKey") as Promise<string | undefined>,
+			this.getSecret("elvexAppId") as Promise<string | undefined>,
+			this.getSecret("elvexVersion") as Promise<string | undefined>,
 		])
 
 		let apiProvider: ApiProvider
@@ -1882,6 +1898,9 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 				liteLlmBaseUrl,
 				liteLlmModelId,
 				liteLlmApiKey,
+				elvexApiKey,
+				elvexAppId,
+				elvexVersion,
 			},
 			lastShownAnnouncementId,
 			customInstructions,
@@ -1978,6 +1997,9 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 			"mistralApiKey",
 			"liteLlmApiKey",
 			"authToken",
+			"elvexApiKey",
+			"elvexAppId",
+			"elvexVersion",
 		]
 		for (const key of secretKeys) {
 			await this.storeSecret(key, undefined)
@@ -1994,3 +2016,4 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 		})
 	}
 }
+
