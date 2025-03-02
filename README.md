@@ -184,6 +184,61 @@ To contribute to the project, start with our [Contributing Guide](CONTRIBUTING.m
 
 </details>
 
+## Nils Addition
+
+How to start the debugging process and build the project:
+
+Fork the Cline repository:
+
+Go to https://github.com/cline/cline
+Click the "Fork" button in the top-right corner
+Choose your GitHub account as the destination for the fork
+Clone your forked repository:
+
+
+git clone https://github.com/YOUR_USERNAME/cline.git
+cd cline
+Install dependencies:
+
+
+npm run install:all
+This command will install dependencies for both the extension and the webview-gui.
+
+Build the project:
+
+
+npm run compile
+This will run type checks, linting, and build the project using esbuild.
+
+Open the project in VS Code:
+
+
+code .
+Install the "esbuild problem matchers" extension in VS Code:
+
+Open the Extensions view (Ctrl+Shift+X)
+Search for "esbuild problem matchers"
+Install the extension by Connor Peet
+Launch the extension in debug mode:
+
+Press F5 or go to Run -> Start Debugging
+This will open a new VS Code window with your local version of Cline loaded
+Test the extension:
+
+In the new VS Code window, you should see the Cline icon in the Activity Bar
+Click on it to open the Cline sidebar
+Test the functionality to ensure your local version is working correctly
+Make changes and iterate:
+
+Edit the code in your original VS Code window
+Use npm run watch to automatically rebuild as you make changes
+Reload the extension in the debug window (Ctrl+R or Cmd+R) to see your changes
+(Optional) If you want to package the extension for local installation:
+
+npm run package
+This will create a .vsix file that you can install in VS Code using the "Install from VSIX" option in the Extensions view.
+
+Remember that this is a development setup, and the extension won't be automatically updated like the one from the VS Code Marketplace. You'll need to manually rebuild and reload the extension to see your changes.
 
 ## License
 
