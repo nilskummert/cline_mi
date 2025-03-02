@@ -33,6 +33,8 @@ import {
 	openRouterDefaultModelInfo,
 	vertexDefaultModelId,
 	vertexModels,
+	elvexDefaultModelId,
+	elvexModelInfoSaneDefaults,
 } from "../../../../src/shared/api"
 import { ExtensionMessage } from "../../../../src/shared/ExtensionMessage"
 import { useExtensionState } from "../../context/ExtensionStateContext"
@@ -195,6 +197,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 					<VSCodeOption value="lmstudio">LM Studio</VSCodeOption>
 					<VSCodeOption value="ollama">Ollama</VSCodeOption>
 					<VSCodeOption value="litellm">LiteLLM</VSCodeOption>
+					<VSCodeOption value="elvex">Elvex</VSCodeOption>
 				</VSCodeDropdown>
 			</DropdownContainer>
 
@@ -1122,6 +1125,51 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 				</div>
 			)}
 
+			{selectedProvider === "elvex" && (
+				<div>
+					<VSCodeTextField
+						value={apiConfiguration?.elvexApiKey || ""}
+						style={{ width: "100%" }}
+						type="password"
+						onInput={handleInputChange("elvexApiKey")}
+						placeholder="Enter API Key...">
+						<span style={{ fontWeight: 500 }}>Elvex API Key</span>
+					</VSCodeTextField>
+					<VSCodeTextField
+						value={apiConfiguration?.elvexAppId || ""}
+						style={{ width: "100%" }}
+						onInput={handleInputChange("elvexAppId")}
+						placeholder="Enter App ID...">
+						<span style={{ fontWeight: 500 }}>Elvex App ID</span>
+					</VSCodeTextField>
+					<VSCodeTextField
+						value={apiConfiguration?.elvexVersion || ""}
+						style={{ width: "100%" }}
+						onInput={handleInputChange("elvexVersion")}
+						placeholder="Enter Version...">
+						<span style={{ fontWeight: 500 }}>Elvex Version</span>
+					</VSCodeTextField>
+					<p
+						style={{
+							fontSize: "12px",
+							marginTop: 3,
+							color: "var(--vscode-descriptionForeground)",
+						}}>
+						These credentials are stored locally and only used to make API requests from this extension.
+						{!apiConfiguration?.elvexApiKey && (
+							<VSCodeLink
+								href="https://elvex.ai"
+								style={{
+									display: "inline",
+									fontSize: "inherit",
+								}}>
+								You can get an Elvex API key by signing up here.
+							</VSCodeLink>
+						)}
+					</p>
+				</div>
+			)}
+
 			{apiErrorMessage && (
 				<p
 					style={{
@@ -1402,6 +1450,18 @@ export function normalizeApiConfiguration(apiConfiguration?: ApiConfiguration): 
 				selectedProvider: provider,
 				selectedModelId: apiConfiguration?.liteLlmModelId || "",
 				selectedModelInfo: openAiModelInfoSaneDefaults,
+			}
+		case "elvex":
+			return {
+				selectedProvider: provider,
+				selectedModelId: apiConfiguration?.elvexAppId
+					? `${apiConfiguration.elvexAppId}@${apiConfiguration.elvexVersion || "latest"}`
+					: "",
+				selectedModelInfo: {
+					...openAiModelInfoSaneDefaults,
+					supportsImages: false,
+					description: "Elvex AI custom model",
+				},
 			}
 		default:
 			return getProviderData(anthropicModels, anthropicDefaultModelId)

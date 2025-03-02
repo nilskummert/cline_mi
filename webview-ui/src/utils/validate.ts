@@ -78,6 +78,11 @@ export function validateApiConfiguration(apiConfiguration?: ApiConfiguration): s
 					return "You must provide a valid model selector."
 				}
 				break
+			case "elvex":
+				if (!apiConfiguration.elvexApiKey || !apiConfiguration.elvexAppId || !apiConfiguration.elvexVersion) {
+					return "You must provide a valid API key, App ID, and Version."
+				}
+				break
 		}
 	}
 	return undefined

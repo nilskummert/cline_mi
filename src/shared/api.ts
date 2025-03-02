@@ -15,6 +15,7 @@ export type ApiProvider =
 	| "mistral"
 	| "vscode-lm"
 	| "litellm"
+	| "elvex"
 
 export interface ApiHandlerOptions {
 	apiModelId?: string
@@ -56,6 +57,9 @@ export interface ApiHandlerOptions {
 	vsCodeLmModelSelector?: any
 	o3MiniReasoningEffort?: string
 	qwenApiLine?: string
+	elvexApiKey?: string
+	elvexAppId?: string
+	elvexVersion?: string
 }
 
 export type ApiConfiguration = ApiHandlerOptions & {
@@ -792,4 +796,17 @@ export const liteLlmModelInfoSaneDefaults: ModelInfo = {
 	supportsPromptCache: false,
 	inputPrice: 0,
 	outputPrice: 0,
+}
+
+// Elvex
+export type ElvexModelId = string // Since Elvex uses app_id@version format
+export const elvexDefaultModelId = "default" // Elvex doesn't require a specific model ID
+export const elvexModelInfoSaneDefaults: ModelInfo = {
+	maxTokens: -1, // No specific token limit mentioned in the API
+	contextWindow: 128_000, // Using a conservative default
+	supportsImages: false,
+	supportsPromptCache: false,
+	inputPrice: 0, // Pricing information not provided
+	outputPrice: 0,
+	description: "Elvex AI custom model",
 }
